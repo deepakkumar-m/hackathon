@@ -1,0 +1,83 @@
+Here’s a hackathon structure that takes participants from zero to full deployment:
+
+🚀 Containerization & DevOps Hackathon — 6 Challenges
+Theme: “From Code to Cloud” — Take a simple Java app and deploy it to Kubernetes the modern way.
+
+Challenge 1 — “What’s in the Box?” (Easy)
+Topic: Understanding Docker & Writing a Dockerfile
+Participants are given the raw Java app from Bitbucket (no Dockerfile). Their job is to understand what the app does, then write a Dockerfile from scratch that builds and runs it.
+Hands-on tasks:
+	∙	Clone the repo from Bitbucket
+	∙	Write a multi-stage Dockerfile (build stage with Maven/Gradle, runtime stage with JRE)
+	∙	Build the image locally: docker build -t myapp:v1 .
+	∙	Run the container and hit the endpoint: docker run -p 8080:8080 myapp:v1
+	∙	Verify the app responds
+Win condition: App runs in a container and returns a valid response on localhost.
+
+Challenge 2 — “Automate the Build” (Easy-Medium)
+Topic: CI Pipeline with ACCP — Build & Tag the Image
+Participants configure an ACCP CI pipeline that automatically builds the Docker image when code is pushed to Bitbucket.
+Hands-on tasks:
+	∙	Connect Bitbucket repo to ACCP
+	∙	Write the pipeline definition file (.yml or equivalent) with stages: checkout → build jar → docker build → tag image
+	∙	Use branch name or commit hash as the image tag
+	∙	Trigger the pipeline with a code push and watch it run
+Win condition: Pipeline runs end-to-end and produces a tagged Docker image in ACCP artifacts.
+
+Challenge 3 — “Ship It to the Registry” (Medium)
+Topic: Push Image to JFrog Artifactory
+Participants extend the CI pipeline to push the built image to JFrog.
+Hands-on tasks:
+	∙	Configure JFrog credentials in ACCP as secrets/environment variables
+	∙	Add a docker push step to the pipeline pointing to the JFrog Docker registry
+	∙	Verify the image appears in JFrog with correct name and tag
+	∙	Pull the image back down locally to confirm it works: docker pull <jfrog-url>/myapp:v1
+Win condition: Image is visible in JFrog Artifactory and pullable by other team members.
+
+Challenge 4 — “Package It with Helm” (Medium)
+Topic: Writing a Helm Chart for the Application
+Participants create a Helm chart that defines how the Java app will run in Kubernetes — no hardcoded values, everything parameterized.
+Hands-on tasks:
+	∙	Run helm create myapp and clean up the template boilerplate
+	∙	Define Deployment, Service, and ConfigMap templates
+	∙	Parameterize image name, tag, replica count, and port in values.yaml
+	∙	Lint the chart: helm lint ./myapp
+	∙	Do a dry-run against the Rancher cluster: helm install myapp ./myapp --dry-run --debug
+Win condition: Helm dry-run produces valid Kubernetes manifests with no errors.
+
+Challenge 5 — “Deploy with ArgoCD” (Medium-Advanced)
+Topic: GitOps Deployment to Kubernetes via ArgoCD
+Participants push their Helm chart to a Git repo and wire it up to ArgoCD for automated deployment to Rancher.
+Hands-on tasks:
+	∙	Push the Helm chart to a dedicated helm-charts Git repo
+	∙	Create an ArgoCD Application manifest pointing to that repo and the target Rancher namespace
+	∙	Apply it and watch ArgoCD sync: kubectl apply -f argocd-app.yaml
+	∙	Access ArgoCD UI and verify the app shows as Synced & Healthy
+	∙	Hit the deployed app’s endpoint from inside the cluster
+Win condition: App is running in Kubernetes, deployed through ArgoCD, and shows green in the UI.
+
+Challenge 6 — “Close the Loop” (Advanced)
+Topic: Full End-to-End — Code Change Flows to Production
+The ultimate challenge. Participants make a small code change and watch it flow from commit all the way to a running updated pod in Kubernetes automatically.
+Hands-on tasks:
+	∙	Make a visible code change (e.g., change an API response message)
+	∙	Push to Bitbucket — ACCP pipeline triggers, builds new image, pushes to JFrog with new tag
+	∙	Update values.yaml image tag in the Helm repo (manual or scripted via pipeline)
+	∙	ArgoCD detects the change and auto-syncs
+	∙	Verify the new pod is running with kubectl get pods and the new response is live
+Bonus: Automate the values.yaml tag update inside the ACCP pipeline so it’s fully hands-free.
+Win condition: Zero manual steps after the code push — new version is live in Kubernetes.
+
+🗺️ Visual Flow Across All Challenges
+
+[Bitbucket Code] → [ACCP CI Build] → [JFrog Registry]
+                                            ↓
+                                     [Helm Chart Repo]
+                                            ↓
+                                       [ArgoCD Sync]
+                                            ↓
+                                  [Rancher / Kubernetes]
+
+
+Tips for Running the Hackathon
+Each challenge should have a starter kit (pre-cloned repo, credentials pre-configured) so teams aren’t stuck on setup. Give each team a dedicated Kubernetes namespace in Rancher. Use a shared scoreboard where teams mark challenges complete after a mentor validates. Time-box each challenge to 45–60 minutes so the full day covers the entire pipeline.​​​​​​​​​​​​​​​​
