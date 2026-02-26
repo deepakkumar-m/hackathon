@@ -1,0 +1,989 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevOps Containerization Hackathon | From Code to Kubernetes</title>
+    <meta name="description" content="Interactive hackathon challenges to learn containerization, Docker, JFrog, Helm, ArgoCD, and Kubernetes deployment step by step.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Particle Background -->
+    <canvas id="particleCanvas"></canvas>
+
+    <!-- Hero Section -->
+    <header class="hero" id="hero">
+        <div class="hero-content">
+            <div class="hero-badge">🚀 HANDS-ON HACKATHON</div>
+            <h1 class="hero-title">
+                <span class="gradient-text">From Code</span>
+                <span class="hero-arrow">→</span>
+                <span class="gradient-text-alt">Kubernetes</span>
+            </h1>
+            <p class="hero-subtitle">
+                6 Progressive Challenges to Master Containerization & DevOps
+            </p>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <span class="stat-number" id="challengeCount">6</span>
+                    <span class="stat-label">Challenges</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">Hands-On</span>
+                    <span class="stat-label">Learning</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">⭐</span>
+                    <span class="stat-label">Earn Points</span>
+                </div>
+            </div>
+            <a href="#roadmap" class="cta-button">
+                <span>Start Your Journey</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+        </div>
+        <div class="scroll-indicator">
+            <div class="mouse">
+                <div class="wheel"></div>
+            </div>
+            <span>Scroll to explore</span>
+        </div>
+    </header>
+
+    <!-- Pipeline Visualization -->
+    <section class="pipeline-section" id="roadmap">
+        <div class="container">
+            <h2 class="section-title">
+                <span class="gradient-text">Your DevOps Journey</span>
+            </h2>
+            <p class="section-subtitle">Follow the pipeline from source code to production deployment</p>
+
+            <div class="pipeline-visual">
+                <div class="pipeline-track">
+                    <div class="pipeline-progress" id="pipelineProgress"></div>
+                </div>
+                <div class="pipeline-nodes">
+                    <div class="pipeline-node active" data-challenge="1">
+                        <div class="node-icon">📦</div>
+                        <div class="node-label">Dockerfile</div>
+                    </div>
+                    <div class="pipeline-node" data-challenge="2">
+                        <div class="node-icon">🔨</div>
+                        <div class="node-label">Build</div>
+                    </div>
+                    <div class="pipeline-node" data-challenge="3">
+                        <div class="node-icon">📤</div>
+                        <div class="node-label">JFrog</div>
+                    </div>
+                    <div class="pipeline-node" data-challenge="4">
+                        <div class="node-icon">⎈</div>
+                        <div class="node-label">Helm</div>
+                    </div>
+                    <div class="pipeline-node" data-challenge="5">
+                        <div class="node-icon">🔄</div>
+                        <div class="node-label">ArgoCD</div>
+                    </div>
+                    <div class="pipeline-node" data-challenge="6">
+                        <div class="node-icon">☸️</div>
+                        <div class="node-label">K8s</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Progress Dashboard -->
+    <section class="progress-section">
+        <div class="container">
+            <div class="progress-dashboard">
+                <div class="progress-card">
+                    <div class="progress-ring-container">
+                        <svg class="progress-ring" width="100" height="100">
+                            <circle class="progress-ring-bg" cx="50" cy="50" r="42"/>
+                            <circle class="progress-ring-fill" cx="50" cy="50" r="42" id="progressRing"/>
+                        </svg>
+                        <span class="progress-percent" id="progressPercent">0%</span>
+                    </div>
+                    <div class="progress-info">
+                        <h3>Overall Progress</h3>
+                        <p><span id="completedCount">0</span> of 6 challenges completed</p>
+                    </div>
+                </div>
+                <div class="score-card">
+                    <div class="score-icon">🏆</div>
+                    <div class="score-info">
+                        <h3>Total Score</h3>
+                        <p class="score-value" id="totalScore">0</p>
+                    </div>
+                </div>
+                <div class="rank-card">
+                    <div class="rank-icon" id="rankIcon">🌱</div>
+                    <div class="rank-info">
+                        <h3>Your Rank</h3>
+                        <p class="rank-value" id="rankTitle">Beginner</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Challenges Section -->
+    <section class="challenges-section" id="challenges">
+        <div class="container">
+
+            <!-- Challenge 1: Dockerfile -->
+            <div class="challenge-card" id="challenge-1" data-difficulty="beginner" data-points="100">
+                <div class="challenge-header">
+                    <div class="challenge-meta">
+                        <span class="difficulty-badge beginner">🟢 BEGINNER</span>
+                        <span class="points-badge">💎 100 pts</span>
+                    </div>
+                    <div class="challenge-number">01</div>
+                </div>
+                <h3 class="challenge-title">🐳 Understanding the Dockerfile</h3>
+                <p class="challenge-desc">
+                    You have a simple Java application in Bitbucket. Your first mission is to understand how
+                    applications are containerized using Docker. Read the Dockerfile line by line and understand
+                    what each instruction does.
+                </p>
+
+                <div class="challenge-objectives">
+                    <h4>🎯 Objectives</h4>
+                    <ul>
+                        <li>Clone the Java application repository from Bitbucket</li>
+                        <li>Read and understand each Dockerfile instruction</li>
+                        <li>Identify the base image, build stages, and exposed ports</li>
+                        <li>Complete the interactive quiz below</li>
+                    </ul>
+                </div>
+
+                <div class="hint-box" id="hint-1">
+                    <button class="hint-toggle" onclick="toggleHint(1)">
+                        <span>💡 Show Hints</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="hint-content" id="hint-content-1">
+                        <div class="hint-item">
+                            <strong>FROM</strong> - Base image your container starts from (e.g., <code>openjdk:17-slim</code>)
+                        </div>
+                        <div class="hint-item">
+                            <strong>COPY</strong> - Copies files from your local machine into the container
+                        </div>
+                        <div class="hint-item">
+                            <strong>RUN</strong> - Executes commands during image build (e.g., <code>mvn clean package</code>)
+                        </div>
+                        <div class="hint-item">
+                            <strong>EXPOSE</strong> - Documents which port the container listens on
+                        </div>
+                        <div class="hint-item">
+                            <strong>ENTRYPOINT / CMD</strong> - The command that runs when the container starts
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive Dockerfile viewer -->
+                <div class="interactive-terminal">
+                    <div class="terminal-header">
+                        <div class="terminal-dots">
+                            <span class="dot red"></span>
+                            <span class="dot yellow"></span>
+                            <span class="dot green"></span>
+                        </div>
+                        <span class="terminal-title">📄 Dockerfile</span>
+                    </div>
+                    <div class="terminal-body dockerfile-viewer">
+                        <div class="dockerfile-line" data-tooltip="Multi-stage build: This first stage compiles your Java code">
+                            <span class="line-num">1</span>
+                            <span class="docker-keyword">FROM</span> maven:3.8.6-openjdk-17-slim <span class="docker-keyword">AS</span> builder
+                        </div>
+                        <div class="dockerfile-line" data-tooltip="Sets the working directory inside the container">
+                            <span class="line-num">2</span>
+                            <span class="docker-keyword">WORKDIR</span> /app
+                        </div>
+                        <div class="dockerfile-line" data-tooltip="Copies your pom.xml for dependency resolution">
+                            <span class="line-num">3</span>
+                            <span class="docker-keyword">COPY</span> pom.xml .
+                        </div>
+                        <div class="dockerfile-line" data-tooltip="Downloads dependencies (cached layer for faster builds)">
+                            <span class="line-num">4</span>
+                            <span class="docker-keyword">RUN</span> mvn dependency:go-offline
+                        </div>
+                        <div class="dockerfile-line" data-tooltip="Copies your source code into the container">
+                            <span class="line-num">5</span>
+                            <span class="docker-keyword">COPY</span> src ./src
+                        </div>
+                        <div class="dockerfile-line" data-tooltip="Builds the JAR file, skipping tests for faster builds">
+                            <span class="line-num">6</span>
+                            <span class="docker-keyword">RUN</span> mvn clean package -DskipTests
+                        </div>
+                        <div class="dockerfile-line" data-tooltip="Second stage: Uses a lighter JDK image for runtime">
+                            <span class="line-num">7</span>
+                            <span class="docker-keyword">FROM</span> openjdk:17-slim
+                        </div>
+                        <div class="dockerfile-line" data-tooltip="Sets the runtime working directory">
+                            <span class="line-num">8</span>
+                            <span class="docker-keyword">WORKDIR</span> /app
+                        </div>
+                        <div class="dockerfile-line" data-tooltip="Copies only the built JAR from the builder stage (smaller final image!)">
+                            <span class="line-num">9</span>
+                            <span class="docker-keyword">COPY</span> --from=builder /app/target/*.jar app.jar
+                        </div>
+                        <div class="dockerfile-line" data-tooltip="Documents that the app listens on port 8080">
+                            <span class="line-num">10</span>
+                            <span class="docker-keyword">EXPOSE</span> 8080
+                        </div>
+                        <div class="dockerfile-line" data-tooltip="The command that starts your Java application">
+                            <span class="line-num">11</span>
+                            <span class="docker-keyword">ENTRYPOINT</span> [<span class="docker-string">"java"</span>, <span class="docker-string">"-jar"</span>, <span class="docker-string">"app.jar"</span>]
+                        </div>
+                    </div>
+                    <div class="terminal-footer">
+                        <span class="tooltip-hint">👆 Hover over each line to see explanations</span>
+                    </div>
+                </div>
+
+                <!-- Quiz -->
+                <div class="quiz-section" id="quiz-1">
+                    <h4>📝 Quick Quiz</h4>
+                    <div class="quiz-question" data-quiz="1-1">
+                        <p>What is the purpose of multi-stage builds in Docker?</p>
+                        <div class="quiz-options">
+                            <button class="quiz-option" onclick="checkAnswer(this, false)">To run multiple containers at once</button>
+                            <button class="quiz-option" onclick="checkAnswer(this, true)">To create smaller final images by separating build and runtime</button>
+                            <button class="quiz-option" onclick="checkAnswer(this, false)">To use multiple Dockerfiles</button>
+                            <button class="quiz-option" onclick="checkAnswer(this, false)">To build for multiple operating systems</button>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+                    <div class="quiz-question" data-quiz="1-2">
+                        <p>What does <code>COPY --from=builder</code> do?</p>
+                        <div class="quiz-options">
+                            <button class="quiz-option" onclick="checkAnswer(this, false)">Copies files from the host machine</button>
+                            <button class="quiz-option" onclick="checkAnswer(this, false)">Downloads files from the internet</button>
+                            <button class="quiz-option" onclick="checkAnswer(this, true)">Copies files from the previous build stage named "builder"</button>
+                            <button class="quiz-option" onclick="checkAnswer(this, false)">Creates a backup of the builder stage</button>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+                </div>
+
+                <button class="complete-btn" onclick="completeChallenge(1)" id="complete-btn-1">
+                    ✅ Mark Challenge Complete
+                </button>
+            </div>
+
+            <!-- Challenge 2: Docker Build -->
+            <div class="challenge-card locked" id="challenge-2" data-difficulty="beginner" data-points="150">
+                <div class="challenge-header">
+                    <div class="challenge-meta">
+                        <span class="difficulty-badge beginner">🟢 BEGINNER</span>
+                        <span class="points-badge">💎 150 pts</span>
+                    </div>
+                    <div class="challenge-number">02</div>
+                </div>
+                <div class="lock-overlay" id="lock-2">
+                    <div class="lock-icon">🔒</div>
+                    <p>Complete Challenge 1 to unlock</p>
+                </div>
+                <h3 class="challenge-title">🔨 Build & Run Your Container</h3>
+                <p class="challenge-desc">
+                    Now that you understand the Dockerfile, it's time to build your Docker image and run the
+                    container locally. Experience the magic of containerization first-hand!
+                </p>
+
+                <div class="challenge-objectives">
+                    <h4>🎯 Objectives</h4>
+                    <ul>
+                        <li>Build the Docker image using <code>docker build</code></li>
+                        <li>Tag the image properly for JFrog registry</li>
+                        <li>Run the container and test the application</li>
+                        <li>Practice common Docker commands</li>
+                    </ul>
+                </div>
+
+                <div class="hint-box" id="hint-2">
+                    <button class="hint-toggle" onclick="toggleHint(2)">
+                        <span>💡 Show Hints</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="hint-content" id="hint-content-2">
+                        <div class="hint-item">
+                            <code>docker build -t myapp:1.0 .</code> — Build with a tag
+                        </div>
+                        <div class="hint-item">
+                            <code>docker images</code> — List all images
+                        </div>
+                        <div class="hint-item">
+                            <code>docker run -d -p 8080:8080 myapp:1.0</code> — Run in background
+                        </div>
+                        <div class="hint-item">
+                            <code>docker ps</code> — See running containers
+                        </div>
+                        <div class="hint-item">
+                            <code>docker logs &lt;container-id&gt;</code> — Check container logs
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Simulated Terminal -->
+                <div class="interactive-terminal">
+                    <div class="terminal-header">
+                        <div class="terminal-dots">
+                            <span class="dot red"></span>
+                            <span class="dot yellow"></span>
+                            <span class="dot green"></span>
+                        </div>
+                        <span class="terminal-title">🖥️ Docker Build Simulator</span>
+                    </div>
+                    <div class="terminal-body" id="terminal-2">
+                        <div class="terminal-output" id="terminal-output-2">
+                            <div class="terminal-line prompt">$ <span class="cursor-blink">_</span></div>
+                        </div>
+                        <div class="terminal-input-area">
+                            <span class="terminal-prompt">$</span>
+                            <input type="text" class="terminal-input" id="terminal-input-2"
+                                placeholder="Type a Docker command..."
+                                onkeydown="handleTerminalInput(event, 2)"
+                                autocomplete="off" spellcheck="false">
+                        </div>
+                    </div>
+                    <div class="terminal-footer">
+                        <span class="tooltip-hint">💻 Try: <code>docker build -t myapp:1.0 .</code></span>
+                    </div>
+                </div>
+
+                <div class="quiz-section" id="quiz-2">
+                    <h4>📝 Quick Quiz</h4>
+                    <div class="quiz-question" data-quiz="2-1">
+                        <p>What does the <code>-t</code> flag in <code>docker build</code> do?</p>
+                        <div class="quiz-options">
+                            <button class="quiz-option" onclick="checkAnswer(this, false)">Sets a timeout for the build</button>
+                            <button class="quiz-option" onclick="checkAnswer(this, true)">Tags the image with a name and optional version</button>
+                            <button class="quiz-option" onclick="checkAnswer(this, false)">Runs tests during build</button>
+                            <button class="quiz-option" onclick="checkAnswer(this, false)">Enables terminal output</button>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+                    <div class="quiz-question" data-quiz="2-2">
+                        <p>What does <code>-p 8080:8080</code> mean in <code>docker run</code>?</p>
+                        <div class="quiz-options">
+                            <button class="quiz-option" onclick="checkAnswer(this, false)">Assigns 8080 MB of memory</button>
+                            <button class="quiz-option" onclick="checkAnswer(this, false)">Uses port 8080 in the container only</button>
+                            <button class="quiz-option" onclick="checkAnswer(this, true)">Maps host port 8080 to container port 8080</button>
+                            <button class="quiz-option" onclick="checkAnswer(this, false)">Runs 8080 parallel processes</button>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+                </div>
+
+                <button class="complete-btn" onclick="completeChallenge(2)" id="complete-btn-2">
+                    ✅ Mark Challenge Complete
+                </button>
+            </div>
+
+            <!-- Challenge 3: JFrog Push -->
+            <div class="challenge-card locked" id="challenge-3" data-difficulty="intermediate" data-points="200">
+                <div class="challenge-header">
+                    <div class="challenge-meta">
+                        <span class="difficulty-badge intermediate">🟡 INTERMEDIATE</span>
+                        <span class="points-badge">💎 200 pts</span>
+                    </div>
+                    <div class="challenge-number">03</div>
+                </div>
+                <div class="lock-overlay" id="lock-3">
+                    <div class="lock-icon">🔒</div>
+                    <p>Complete Challenge 2 to unlock</p>
+                </div>
+                <h3 class="challenge-title">📤 Push Image to JFrog Artifactory</h3>
+                <p class="challenge-desc">
+                    Your image is built! Now push it to JFrog Artifactory — your organization's private container
+                    registry. This is where all production-ready images are stored securely.
+                </p>
+
+                <div class="challenge-objectives">
+                    <h4>🎯 Objectives</h4>
+                    <ul>
+                        <li>Login to JFrog Artifactory Docker registry</li>
+                        <li>Tag the image with the JFrog registry URL</li>
+                        <li>Push the image to JFrog</li>
+                        <li>Verify the image exists in JFrog UI</li>
+                    </ul>
+                </div>
+
+                <div class="hint-box" id="hint-3">
+                    <button class="hint-toggle" onclick="toggleHint(3)">
+                        <span>💡 Show Hints</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="hint-content" id="hint-content-3">
+                        <div class="hint-item">
+                            <code>docker login your-jfrog.jfrog.io</code> — Authenticate with JFrog
+                        </div>
+                        <div class="hint-item">
+                            <code>docker tag myapp:1.0 your-jfrog.jfrog.io/docker-local/myapp:1.0</code> — Tag for registry
+                        </div>
+                        <div class="hint-item">
+                            <code>docker push your-jfrog.jfrog.io/docker-local/myapp:1.0</code> — Push the image
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive Drag and Drop: Sequence ordering -->
+                <div class="sequence-challenge">
+                    <h4>🧩 Put the Steps in Order</h4>
+                    <p class="sequence-desc">Drag the steps into the correct order for pushing an image to JFrog:</p>
+                    <div class="sortable-list" id="sortable-3">
+                        <div class="sortable-item" draggable="true" data-order="3" data-id="push">
+                            <span class="drag-handle">⠿</span>
+                            <code>docker push registry/myapp:1.0</code>
+                        </div>
+                        <div class="sortable-item" draggable="true" data-order="1" data-id="login">
+                            <span class="drag-handle">⠿</span>
+                            <code>docker login your-jfrog.jfrog.io</code>
+                        </div>
+                        <div class="sortable-item" draggable="true" data-order="4" data-id="verify">
+                            <span class="drag-handle">⠿</span>
+                            Verify in JFrog UI → Artifactory → Docker Repos
+                        </div>
+                        <div class="sortable-item" draggable="true" data-order="2" data-id="tag">
+                            <span class="drag-handle">⠿</span>
+                            <code>docker tag myapp:1.0 registry/myapp:1.0</code>
+                        </div>
+                    </div>
+                    <button class="check-order-btn" onclick="checkOrder(3)">Check Order ✓</button>
+                    <div class="order-feedback" id="order-feedback-3"></div>
+                </div>
+
+                <!-- Simulated Terminal -->
+                <div class="interactive-terminal">
+                    <div class="terminal-header">
+                        <div class="terminal-dots">
+                            <span class="dot red"></span>
+                            <span class="dot yellow"></span>
+                            <span class="dot green"></span>
+                        </div>
+                        <span class="terminal-title">🖥️ JFrog Push Simulator</span>
+                    </div>
+                    <div class="terminal-body" id="terminal-3">
+                        <div class="terminal-output" id="terminal-output-3">
+                            <div class="terminal-line prompt">$ <span class="cursor-blink">_</span></div>
+                        </div>
+                        <div class="terminal-input-area">
+                            <span class="terminal-prompt">$</span>
+                            <input type="text" class="terminal-input" id="terminal-input-3"
+                                placeholder="Type a Docker/JFrog command..."
+                                onkeydown="handleTerminalInput(event, 3)"
+                                autocomplete="off" spellcheck="false">
+                        </div>
+                    </div>
+                    <div class="terminal-footer">
+                        <span class="tooltip-hint">💻 Try: <code>docker login your-jfrog.jfrog.io</code></span>
+                    </div>
+                </div>
+
+                <button class="complete-btn" onclick="completeChallenge(3)" id="complete-btn-3">
+                    ✅ Mark Challenge Complete
+                </button>
+            </div>
+
+            <!-- Challenge 4: Helm Charts -->
+            <div class="challenge-card locked" id="challenge-4" data-difficulty="intermediate" data-points="250">
+                <div class="challenge-header">
+                    <div class="challenge-meta">
+                        <span class="difficulty-badge intermediate">🟡 INTERMEDIATE</span>
+                        <span class="points-badge">💎 250 pts</span>
+                    </div>
+                    <div class="challenge-number">04</div>
+                </div>
+                <div class="lock-overlay" id="lock-4">
+                    <div class="lock-icon">🔒</div>
+                    <p>Complete Challenge 3 to unlock</p>
+                </div>
+                <h3 class="challenge-title">⎈ Creating Helm Charts</h3>
+                <p class="challenge-desc">
+                    Helm is the package manager for Kubernetes. Instead of writing raw YAML manifests, you'll
+                    create reusable, templated Helm charts to define how your app runs in Kubernetes.
+                </p>
+
+                <div class="challenge-objectives">
+                    <h4>🎯 Objectives</h4>
+                    <ul>
+                        <li>Understand the Helm chart directory structure</li>
+                        <li>Explore <code>Chart.yaml</code>, <code>values.yaml</code>, and templates</li>
+                        <li>Modify <code>values.yaml</code> to configure your application</li>
+                        <li>Understand template variables and rendering</li>
+                    </ul>
+                </div>
+
+                <div class="hint-box" id="hint-4">
+                    <button class="hint-toggle" onclick="toggleHint(4)">
+                        <span>💡 Show Hints</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="hint-content" id="hint-content-4">
+                        <div class="hint-item">
+                            <code>helm create myapp-chart</code> — Scaffold a new Helm chart
+                        </div>
+                        <div class="hint-item">
+                            <code>Chart.yaml</code> — Metadata about your chart (name, version, description)
+                        </div>
+                        <div class="hint-item">
+                            <code>values.yaml</code> — Default configuration values (image, replicas, ports)
+                        </div>
+                        <div class="hint-item">
+                            <code>templates/</code> — Kubernetes manifests with Go template syntax
+                        </div>
+                        <div class="hint-item">
+                            <code>helm template myapp ./myapp-chart</code> — Preview rendered YAML
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive File Explorer -->
+                <div class="file-explorer">
+                    <h4>📁 Helm Chart Structure</h4>
+                    <div class="file-tree">
+                        <div class="file-tree-item folder open" onclick="toggleFolder(this)">
+                            <span class="file-icon">📂</span> myapp-chart/
+                        </div>
+                        <div class="file-tree-children">
+                            <div class="file-tree-item file active-file" onclick="showFileContent('chart-yaml')">
+                                <span class="file-icon">📄</span> Chart.yaml
+                            </div>
+                            <div class="file-tree-item file" onclick="showFileContent('values-yaml')">
+                                <span class="file-icon">⚙️</span> values.yaml
+                            </div>
+                            <div class="file-tree-item folder open" onclick="toggleFolder(this)">
+                                <span class="file-icon">📂</span> templates/
+                            </div>
+                            <div class="file-tree-children">
+                                <div class="file-tree-item file" onclick="showFileContent('deployment-yaml')">
+                                    <span class="file-icon">📄</span> deployment.yaml
+                                </div>
+                                <div class="file-tree-item file" onclick="showFileContent('service-yaml')">
+                                    <span class="file-icon">📄</span> service.yaml
+                                </div>
+                                <div class="file-tree-item file" onclick="showFileContent('ingress-yaml')">
+                                    <span class="file-icon">📄</span> ingress.yaml
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="file-content-viewer" id="file-content-viewer">
+                        <div class="file-content-header" id="file-content-title">Chart.yaml</div>
+                        <pre class="file-content" id="file-content-body">apiVersion: v2
+name: myapp-chart
+description: A Helm chart for our Java application
+type: application
+version: 0.1.0
+appVersion: "1.0.0"</pre>
+                    </div>
+                </div>
+
+                <!-- Fill in the blanks challenge -->
+                <div class="fill-blanks-section">
+                    <h4>✍️ Fill in the values.yaml</h4>
+                    <p>Complete the <code>values.yaml</code> to configure your application:</p>
+                    <div class="blanks-editor">
+                        <div class="blank-line">
+                            <span class="yaml-key">replicaCount:</span>
+                            <input type="text" class="blank-input" data-answer="2" placeholder="?" id="blank-4-1">
+                            <span class="blank-hint">How many pod replicas?</span>
+                        </div>
+                        <div class="blank-line">
+                            <span class="yaml-key">image.repository:</span>
+                            <input type="text" class="blank-input wide" data-answer="your-jfrog.jfrog.io/docker-local/myapp" placeholder="?" id="blank-4-2">
+                            <span class="blank-hint">JFrog registry URL/image</span>
+                        </div>
+                        <div class="blank-line">
+                            <span class="yaml-key">image.tag:</span>
+                            <input type="text" class="blank-input" data-answer="1.0" placeholder="?" id="blank-4-3">
+                            <span class="blank-hint">Image version tag</span>
+                        </div>
+                        <div class="blank-line">
+                            <span class="yaml-key">service.port:</span>
+                            <input type="text" class="blank-input" data-answer="8080" placeholder="?" id="blank-4-4">
+                            <span class="blank-hint">What port does the app use?</span>
+                        </div>
+                    </div>
+                    <button class="check-blanks-btn" onclick="checkBlanks(4)">Check Answers ✓</button>
+                    <div class="blanks-feedback" id="blanks-feedback-4"></div>
+                </div>
+
+                <button class="complete-btn" onclick="completeChallenge(4)" id="complete-btn-4">
+                    ✅ Mark Challenge Complete
+                </button>
+            </div>
+
+            <!-- Challenge 5: ArgoCD -->
+            <div class="challenge-card locked" id="challenge-5" data-difficulty="advanced" data-points="300">
+                <div class="challenge-header">
+                    <div class="challenge-meta">
+                        <span class="difficulty-badge advanced">🔴 ADVANCED</span>
+                        <span class="points-badge">💎 300 pts</span>
+                    </div>
+                    <div class="challenge-number">05</div>
+                </div>
+                <div class="lock-overlay" id="lock-5">
+                    <div class="lock-icon">🔒</div>
+                    <p>Complete Challenge 4 to unlock</p>
+                </div>
+                <h3 class="challenge-title">🔄 GitOps with ArgoCD</h3>
+                <p class="challenge-desc">
+                    ArgoCD is a GitOps continuous delivery tool for Kubernetes. It watches your Git repo and
+                    automatically syncs your Helm charts to the cluster. No more manual <code>kubectl apply</code>!
+                </p>
+
+                <div class="challenge-objectives">
+                    <h4>🎯 Objectives</h4>
+                    <ul>
+                        <li>Understand GitOps principles and ArgoCD architecture</li>
+                        <li>Create an ArgoCD Application manifest</li>
+                        <li>Connect your Helm chart repo to ArgoCD</li>
+                        <li>Trigger a sync and observe automatic deployment</li>
+                    </ul>
+                </div>
+
+                <div class="hint-box" id="hint-5">
+                    <button class="hint-toggle" onclick="toggleHint(5)">
+                        <span>💡 Show Hints</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="hint-content" id="hint-content-5">
+                        <div class="hint-item">
+                            ArgoCD follows the <strong>GitOps</strong> pattern: Git is the single source of truth
+                        </div>
+                        <div class="hint-item">
+                            <code>Application</code> CRD tells ArgoCD what to deploy and where
+                        </div>
+                        <div class="hint-item">
+                            ArgoCD auto-detects drift between Git and cluster state
+                        </div>
+                        <div class="hint-item">
+                            Sync policies: <strong>Manual</strong> vs <strong>Auto-Sync</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- GitOps Flow Visualization -->
+                <div class="gitops-flow">
+                    <h4>🔄 GitOps Flow</h4>
+                    <div class="flow-diagram">
+                        <div class="flow-step" id="flow-step-1">
+                            <div class="flow-icon">👨‍💻</div>
+                            <div class="flow-label">Developer pushes<br>to Git</div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step" id="flow-step-2">
+                            <div class="flow-icon">📂</div>
+                            <div class="flow-label">Git Repository<br>(Helm Charts)</div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step" id="flow-step-3">
+                            <div class="flow-icon">🔄</div>
+                            <div class="flow-label">ArgoCD<br>detects changes</div>
+                        </div>
+                        <div class="flow-arrow">→</div>
+                        <div class="flow-step" id="flow-step-4">
+                            <div class="flow-icon">☸️</div>
+                            <div class="flow-label">Kubernetes<br>auto-deploys</div>
+                        </div>
+                    </div>
+                    <button class="animate-flow-btn" onclick="animateGitOpsFlow()">▶ Animate Flow</button>
+                </div>
+
+                <!-- ArgoCD Application YAML -->
+                <div class="interactive-terminal">
+                    <div class="terminal-header">
+                        <div class="terminal-dots">
+                            <span class="dot red"></span>
+                            <span class="dot yellow"></span>
+                            <span class="dot green"></span>
+                        </div>
+                        <span class="terminal-title">📄 ArgoCD Application Manifest</span>
+                    </div>
+                    <div class="terminal-body dockerfile-viewer">
+                        <div class="dockerfile-line" data-tooltip="Standard Kubernetes API version for ArgoCD">
+                            <span class="line-num">1</span>
+                            <span class="docker-keyword">apiVersion:</span> argoproj.io/v1alpha1
+                        </div>
+                        <div class="dockerfile-line" data-tooltip="CRD type — ArgoCD Application">
+                            <span class="line-num">2</span>
+                            <span class="docker-keyword">kind:</span> Application
+                        </div>
+                        <div class="dockerfile-line" data-tooltip="Name of your ArgoCD application">
+                            <span class="line-num">3</span>
+                            <span class="docker-keyword">metadata:</span>
+                        </div>
+                        <div class="dockerfile-line" data-tooltip="This name appears in ArgoCD dashboard">
+                            <span class="line-num">4</span>
+                            &nbsp;&nbsp;<span class="docker-keyword">name:</span> myapp
+                        </div>
+                        <div class="dockerfile-line" data-tooltip="ArgoCD namespace where apps are managed">
+                            <span class="line-num">5</span>
+                            &nbsp;&nbsp;<span class="docker-keyword">namespace:</span> argocd
+                        </div>
+                        <div class="dockerfile-line" data-tooltip="Source and destination configuration">
+                            <span class="line-num">6</span>
+                            <span class="docker-keyword">spec:</span>
+                        </div>
+                        <div class="dockerfile-line" data-tooltip="Where to find your Helm chart">
+                            <span class="line-num">7</span>
+                            &nbsp;&nbsp;<span class="docker-keyword">source:</span>
+                        </div>
+                        <div class="dockerfile-line" data-tooltip="Your Git repo URL containing the Helm chart">
+                            <span class="line-num">8</span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="docker-keyword">repoURL:</span> <span class="docker-string">https://bitbucket.org/team/myapp-helm.git</span>
+                        </div>
+                        <div class="dockerfile-line" data-tooltip="Which branch or tag to track">
+                            <span class="line-num">9</span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="docker-keyword">targetRevision:</span> main
+                        </div>
+                        <div class="dockerfile-line" data-tooltip="Path to helm chart within the repo">
+                            <span class="line-num">10</span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="docker-keyword">path:</span> myapp-chart
+                        </div>
+                        <div class="dockerfile-line" data-tooltip="Where to deploy in Kubernetes">
+                            <span class="line-num">11</span>
+                            &nbsp;&nbsp;<span class="docker-keyword">destination:</span>
+                        </div>
+                        <div class="dockerfile-line" data-tooltip="The Kubernetes API server URL">
+                            <span class="line-num">12</span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="docker-keyword">server:</span> https://kubernetes.default.svc
+                        </div>
+                        <div class="dockerfile-line" data-tooltip="Kubernetes namespace for your app">
+                            <span class="line-num">13</span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;<span class="docker-keyword">namespace:</span> myapp-prod
+                        </div>
+                    </div>
+                    <div class="terminal-footer">
+                        <span class="tooltip-hint">👆 Hover over each line to see explanations</span>
+                    </div>
+                </div>
+
+                <div class="quiz-section" id="quiz-5">
+                    <h4>📝 Quick Quiz</h4>
+                    <div class="quiz-question" data-quiz="5-1">
+                        <p>What is the main benefit of GitOps?</p>
+                        <div class="quiz-options">
+                            <button class="quiz-option" onclick="checkAnswer(this, false)">Faster builds</button>
+                            <button class="quiz-option" onclick="checkAnswer(this, true)">Git becomes the single source of truth for deployments</button>
+                            <button class="quiz-option" onclick="checkAnswer(this, false)">No need for Kubernetes</button>
+                            <button class="quiz-option" onclick="checkAnswer(this, false)">Eliminates the need for Docker</button>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+                    <div class="quiz-question" data-quiz="5-2">
+                        <p>What does ArgoCD do when it detects drift?</p>
+                        <div class="quiz-options">
+                            <button class="quiz-option" onclick="checkAnswer(this, false)">Deletes the application</button>
+                            <button class="quiz-option" onclick="checkAnswer(this, false)">Sends an email</button>
+                            <button class="quiz-option" onclick="checkAnswer(this, true)">Syncs the cluster state back to match Git (if auto-sync is enabled)</button>
+                            <button class="quiz-option" onclick="checkAnswer(this, false)">Rolls back to the previous Git commit</button>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+                </div>
+
+                <button class="complete-btn" onclick="completeChallenge(5)" id="complete-btn-5">
+                    ✅ Mark Challenge Complete
+                </button>
+            </div>
+
+            <!-- Challenge 6: Kubernetes Deployment -->
+            <div class="challenge-card locked" id="challenge-6" data-difficulty="advanced" data-points="350">
+                <div class="challenge-header">
+                    <div class="challenge-meta">
+                        <span class="difficulty-badge advanced">🔴 ADVANCED</span>
+                        <span class="points-badge">💎 350 pts</span>
+                    </div>
+                    <div class="challenge-number">06</div>
+                </div>
+                <div class="lock-overlay" id="lock-6">
+                    <div class="lock-icon">🔒</div>
+                    <p>Complete Challenge 5 to unlock</p>
+                </div>
+                <h3 class="challenge-title">☸️ Kubernetes Deployment & Monitoring</h3>
+                <p class="challenge-desc">
+                    The final boss! Your application is now deployed via ArgoCD on Kubernetes (Rancher).
+                    Monitor pods, check logs, scale your deployment, and understand the full lifecycle.
+                </p>
+
+                <div class="challenge-objectives">
+                    <h4>🎯 Objectives</h4>
+                    <ul>
+                        <li>Verify your deployment in Rancher dashboard</li>
+                        <li>Use <code>kubectl</code> to inspect pods, services, and events</li>
+                        <li>Scale your deployment up and down</li>
+                        <li>Perform a rolling update by changing the image tag</li>
+                        <li>Understand the full pipeline: Code → Docker → JFrog → Helm → ArgoCD → K8s</li>
+                    </ul>
+                </div>
+
+                <div class="hint-box" id="hint-6">
+                    <button class="hint-toggle" onclick="toggleHint(6)">
+                        <span>💡 Show Hints</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
+                    </button>
+                    <div class="hint-content" id="hint-content-6">
+                        <div class="hint-item">
+                            <code>kubectl get pods -n myapp-prod</code> — List running pods
+                        </div>
+                        <div class="hint-item">
+                            <code>kubectl describe pod &lt;pod-name&gt; -n myapp-prod</code> — Pod details
+                        </div>
+                        <div class="hint-item">
+                            <code>kubectl logs &lt;pod-name&gt; -n myapp-prod</code> — Check logs
+                        </div>
+                        <div class="hint-item">
+                            <code>kubectl scale deployment myapp --replicas=3 -n myapp-prod</code> — Scale up
+                        </div>
+                        <div class="hint-item">
+                            Update <code>values.yaml</code> image tag → push to Git → ArgoCD auto-syncs!
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kubernetes Dashboard Simulator -->
+                <div class="k8s-dashboard">
+                    <h4>☸️ Kubernetes Dashboard (Simulated)</h4>
+                    <div class="k8s-cluster-info">
+                        <div class="k8s-info-item">
+                            <span class="k8s-label">Cluster</span>
+                            <span class="k8s-value">rancher-prod</span>
+                        </div>
+                        <div class="k8s-info-item">
+                            <span class="k8s-label">Namespace</span>
+                            <span class="k8s-value">myapp-prod</span>
+                        </div>
+                        <div class="k8s-info-item">
+                            <span class="k8s-label">Status</span>
+                            <span class="k8s-value status-healthy">✅ Healthy</span>
+                        </div>
+                    </div>
+                    <div class="k8s-pods">
+                        <div class="k8s-pod running" id="pod-1">
+                            <div class="pod-status-dot"></div>
+                            <div class="pod-info">
+                                <span class="pod-name">myapp-6d4f7b8c9-x2k4m</span>
+                                <span class="pod-status">Running</span>
+                            </div>
+                            <div class="pod-metrics">
+                                <span>CPU: 12%</span>
+                                <span>Mem: 128Mi</span>
+                            </div>
+                        </div>
+                        <div class="k8s-pod running" id="pod-2">
+                            <div class="pod-status-dot"></div>
+                            <div class="pod-info">
+                                <span class="pod-name">myapp-6d4f7b8c9-a8n2p</span>
+                                <span class="pod-status">Running</span>
+                            </div>
+                            <div class="pod-metrics">
+                                <span>CPU: 8%</span>
+                                <span>Mem: 115Mi</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="k8s-actions">
+                        <button class="k8s-btn" onclick="scalePods('up')">⬆ Scale Up</button>
+                        <button class="k8s-btn" onclick="scalePods('down')">⬇ Scale Down</button>
+                        <button class="k8s-btn" onclick="rolloutRestart()">🔄 Rolling Restart</button>
+                    </div>
+                </div>
+
+                <!-- Simulated Terminal -->
+                <div class="interactive-terminal">
+                    <div class="terminal-header">
+                        <div class="terminal-dots">
+                            <span class="dot red"></span>
+                            <span class="dot yellow"></span>
+                            <span class="dot green"></span>
+                        </div>
+                        <span class="terminal-title">🖥️ Kubectl Simulator</span>
+                    </div>
+                    <div class="terminal-body" id="terminal-6">
+                        <div class="terminal-output" id="terminal-output-6">
+                            <div class="terminal-line prompt">$ <span class="cursor-blink">_</span></div>
+                        </div>
+                        <div class="terminal-input-area">
+                            <span class="terminal-prompt">$</span>
+                            <input type="text" class="terminal-input" id="terminal-input-6"
+                                placeholder="Type a kubectl command..."
+                                onkeydown="handleTerminalInput(event, 6)"
+                                autocomplete="off" spellcheck="false">
+                        </div>
+                    </div>
+                    <div class="terminal-footer">
+                        <span class="tooltip-hint">💻 Try: <code>kubectl get pods -n myapp-prod</code></span>
+                    </div>
+                </div>
+
+                <div class="quiz-section" id="quiz-6">
+                    <h4>📝 Final Quiz</h4>
+                    <div class="quiz-question" data-quiz="6-1">
+                        <p>What is the correct end-to-end pipeline order?</p>
+                        <div class="quiz-options">
+                            <button class="quiz-option" onclick="checkAnswer(this, false)">Docker → Git → JFrog → K8s → ArgoCD</button>
+                            <button class="quiz-option" onclick="checkAnswer(this, true)">Code → Docker Build → JFrog Push → Helm Chart → ArgoCD Sync → K8s Deploy</button>
+                            <button class="quiz-option" onclick="checkAnswer(this, false)">ArgoCD → Helm → Docker → JFrog → K8s</button>
+                            <button class="quiz-option" onclick="checkAnswer(this, false)">K8s → Docker → Helm → ArgoCD → JFrog</button>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+                    <div class="quiz-question" data-quiz="6-2">
+                        <p>How do you trigger a new deployment with GitOps?</p>
+                        <div class="quiz-options">
+                            <button class="quiz-option" onclick="checkAnswer(this, false)">SSH into the server and restart</button>
+                            <button class="quiz-option" onclick="checkAnswer(this, false)">Run kubectl apply manually</button>
+                            <button class="quiz-option" onclick="checkAnswer(this, true)">Update values.yaml in Git → ArgoCD auto-syncs</button>
+                            <button class="quiz-option" onclick="checkAnswer(this, false)">Restart Rancher</button>
+                        </div>
+                        <div class="quiz-feedback"></div>
+                    </div>
+                </div>
+
+                <button class="complete-btn" onclick="completeChallenge(6)" id="complete-btn-6">
+                    🏆 Complete Hackathon!
+                </button>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Completion Section -->
+    <section class="completion-section" id="completion" style="display:none;">
+        <div class="container">
+            <div class="completion-card">
+                <div class="confetti-container" id="confetti"></div>
+                <h2>🎉 Congratulations!</h2>
+                <p class="completion-text">You've completed all 6 challenges and mastered the full DevOps pipeline!</p>
+                <div class="completion-score">
+                    <span>Final Score:</span>
+                    <span class="final-score" id="finalScore">1350</span>
+                </div>
+                <div class="completion-badge">
+                    <div class="badge-icon">🏅</div>
+                    <h3>DevOps Champion</h3>
+                    <p>Code → Docker → JFrog → Helm → ArgoCD → Kubernetes</p>
+                </div>
+                <button class="reset-btn" onclick="resetProgress()">🔄 Reset & Start Over</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>🚀 DevOps Containerization Hackathon — Learn by Doing!</p>
+            <p class="footer-sub">Docker • JFrog • Helm • ArgoCD • Kubernetes (Rancher)</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
