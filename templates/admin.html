@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% block title %}Admin Panel | GBME DevOps Hackathon{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="admin-page">
+        <div class="dash-hero">
+            <div class="dash-hero-content">
+                <h1>🔑 <span class="gradient-text">Admin Panel</span></h1>
+                <p>Monitor team progress and manage the hackathon</p>
+            </div>
+        </div>
+
+        <!-- Leaderboard -->
+        <div class="admin-section">
+            <h2 class="section-title"><span class="gradient-text">🏆 Leaderboard</span></h2>
+            <div class="leaderboard">
+                {% for team in teams_data %}
+                <div class="leaderboard-row {% if loop.index <= 3 %}top-three{% endif %}">
+                    <div class="lb-rank">
+                        {% if loop.index == 1 %}🥇{% elif loop.index == 2 %}🥈{% elif loop.index == 3 %}🥉{% else %}{{
+                        loop.index }}{% endif %}
+                    </div>
+                    <div class="lb-team">
+                        <span class="lb-name">{{ team.display_name }}</span>
+                        <span class="lb-id">{{ team.id }}</span>
+                    </div>
+                    <div class="lb-progress">
+                        <div class="lb-progress-bar">
+                            <div class="lb-progress-fill" style="width: {{ team.progress_pct }}%"></div>
+                        </div>
+                        <span class="lb-progress-text">{{ team.completed|length }}/6</span>
+                    </div>
+                    <div class="lb-challenges">
+                        {% for cid in range(1, 7) %}
+                        <span class="lb-challenge-dot {{ 'done' if cid in team.completed else '' }}"
+                            title="Challenge {{ cid }}" onclick="toggleChallenge('{{ team.id }}', {{ cid }})">
+                            {{ cid }}
+                        </span>
+                        {% endfor %}
+                    </div>
+                    <div class="lb-actions">
+                        <button class="admin-btn danger-btn" onclick="resetTeam('{{ team.id }}')">Reset</button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Global Actions -->
+        <div class="admin-section">
+            <h2 class="section-title"><span class="gradient-text">⚙️ Actions</span></h2>
+            <div class="admin-actions">
+                <button class="admin-btn danger-btn large" onclick="resetAll()">🗑️ Reset All Teams</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    function toggleChallenge(teamId, challengeId) {
+        const dot = event.target;
+        const original = dot.textContent;
+        dot.textContent = '⏳';
+        dot.style.pointerEvents = 'none';
+
+        fetch(`/admin/toggle/${teamId}/${challengeId}`, { method: 'POST' })
+            .then(r => {
+                if (!r.ok) throw new Error('Server error: ' + r.status);
+                return r.json();
+            })
+            .then(() => location.reload())
+            .catch(err => {
+                alert('Toggle failed: ' + err.message);
+                dot.textContent = original;
+                dot.style.pointerEvents = '';
+            });
+    }
+
+    function resetTeam(teamId) {
+        const btn = event.target;
+
+        // Two-click confirmation: first click changes text, second click confirms
+        if (btn.dataset.confirming !== 'true') {
+            btn.dataset.confirming = 'true';
+            btn.textContent = 'Confirm?';
+            btn.style.background = 'rgba(239,68,68,0.4)';
+            // Auto-revert after 3 seconds if not clicked again
+            setTimeout(() => {
+                btn.dataset.confirming = '';
+                btn.textContent = 'Reset';
+                btn.style.background = '';
+            }, 3000);
+            return;
+        }
+
+        btn.textContent = '⏳ Resetting...';
+        btn.disabled = true;
+
+        fetch(`/admin/reset/${teamId}`, { method: 'POST' })
+            .then(r => {
+                if (!r.ok) throw new Error('Server error: ' + r.status);
+                return r.json();
+            })
+            .then(() => location.reload())
+            .catch(err => {
+                alert('Reset failed: ' + err.message);
+                btn.textContent = 'Reset';
+                btn.disabled = false;
+                btn.dataset.confirming = '';
+                btn.style.background = '';
+            });
+    }
+
+    function resetAll() {
+        const btn = event.target;
+
+        if (btn.dataset.confirming !== 'true') {
+            btn.dataset.confirming = 'true';
+            btn.textContent = '⚠️ Click again to confirm';
+            btn.style.background = 'rgba(239,68,68,0.4)';
+            setTimeout(() => {
+                btn.dataset.confirming = '';
+                btn.textContent = '🗑️ Reset All Teams';
+                btn.style.background = '';
+            }, 3000);
+            return;
+        }
+
+        btn.textContent = '⏳ Resetting all...';
+        btn.disabled = true;
+
+        fetch('/admin/reset-all', { method: 'POST' })
+            .then(r => {
+                if (!r.ok) throw new Error('Server error: ' + r.status);
+                return r.json();
+            })
+            .then(() => location.reload())
+            .catch(err => {
+                alert('Reset failed: ' + err.message);
+                btn.textContent = '🗑️ Reset All Teams';
+                btn.disabled = false;
+                btn.dataset.confirming = '';
+                btn.style.background = '';
+            });
+    }
+</script>
+{% endblock %}

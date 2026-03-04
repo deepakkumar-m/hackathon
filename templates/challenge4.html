@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+{% block title %}Challenge 4: {{ challenge.title }} | GBME Hackathon{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="challenge-page">
+        <div class="breadcrumb">
+            <a href="{{ url_for('dashboard') }}">← Dashboard</a>
+            <span class="breadcrumb-sep">/</span>
+            <span>Challenge 4</span>
+        </div>
+
+        <div class="challenge-hero">
+            <div class="challenge-hero-meta">
+                <span class="difficulty-badge {{ challenge.difficulty }}">{{ challenge.icon }} {{
+                    challenge.difficulty|upper }}</span>
+                <span class="time-badge">⏱ {{ challenge.time }}</span>
+            </div>
+            <h1>{{ challenge.emoji }} Challenge 4: {{ challenge.title }}</h1>
+            <p class="challenge-hero-desc">{{ challenge.description }}</p>
+        </div>
+
+        <div class="challenge-tools">
+            <h3>🔗 Tools for this Challenge</h3>
+            <div class="tools-row">
+                {% for tool in tools_with_urls %}
+                <a href="{{ tool.url }}" target="_blank" rel="noopener" class="tool-btn {{ tool.name }}">
+                    {{ tool.label }} ↗
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="challenge-section">
+            <h2>📋 Scenario</h2>
+            <div class="info-card warning">
+                <h4>⚠️ The pipeline passes, but the app fails!</h4>
+                <p>The Java application has a <strong>hardcoded database password</strong>. The pipeline builds fine,
+                    but when deployed, the pod crashes because the database secret isn't provided via Kubernetes.</p>
+                <div class="alert-box warning">
+                    <strong>Pod Status: CrashLoopBackOff</strong><br>
+                    Error: Connection refused — DB_PASSWORD not set as environment variable
+                </div>
+            </div>
+        </div>
+
+        <div class="challenge-section">
+            <h2>📝 Steps to Complete</h2>
+            <div class="steps-list">
+                <div class="step">
+                    <div class="step-num">1</div>
+                    <div class="step-content">
+                        <h4>Create a Kubernetes Secret</h4>
+                        <p>Go to <a href="{{ tool_urls.rancher }}" target="_blank">Rancher ↗</a> or use kubectl to
+                            create a secret in your namespace:</p>
+                        <div class="code-block">
+                            <pre>kubectl create secret generic db-credentials \
+  --from-literal=DB_PASSWORD=mySecurePassword123 \
+  -n your-namespace</pre>
+                        </div>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-num">2</div>
+                    <div class="step-content">
+                        <h4>Modify the Helm Chart</h4>
+                        <p>Update <code>values.yaml</code> to reference the secret:</p>
+                        <div class="code-block">
+                            <pre>env:
+  - name: DB_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: db-credentials
+        key: DB_PASSWORD</pre>
+                        </div>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-num">3</div>
+                    <div class="step-content">
+                        <h4>Update Deployment Template</h4>
+                        <p>Ensure the deployment template in <code>templates/deployment.yaml</code> injects the
+                            environment variable into the container.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-num">4</div>
+                    <div class="step-content">
+                        <h4>Deploy & Verify</h4>
+                        <p>Push changes, sync via <a href="{{ tool_urls.argocd }}" target="_blank">ArgoCD ↗</a>, and
+                            verify the pod starts successfully in <a href="{{ tool_urls.rancher }}"
+                                target="_blank">Rancher ↗</a>.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="challenge-section">
+            <h2>🎯 What You Learn</h2>
+            <div class="learning-grid">
+                <div class="learning-item">
+                    <span class="learning-icon">🔐</span>
+                    <div>
+                        <h4>Never Hardcode Secrets</h4>
+                        <p>Passwords, API keys, and tokens must never be stored in source code.</p>
+                    </div>
+                </div>
+                <div class="learning-item">
+                    <span class="learning-icon">🗝️</span>
+                    <div>
+                        <h4>Kubernetes Secrets</h4>
+                        <p>Use K8s Secrets to store sensitive data and inject via environment variables.</p>
+                    </div>
+                </div>
+                <div class="learning-item">
+                    <span class="learning-icon">⎈</span>
+                    <div>
+                        <h4>Helm Values Mastery</h4>
+                        <p>Modify Helm values to control application configuration declaratively.</p>
+                    </div>
+                </div>
+                <div class="learning-item">
+                    <span class="learning-icon">💉</span>
+                    <div>
+                        <h4>Environment Injection</h4>
+                        <p>Understand how secrets flow from K8s → Pod → Container → Application.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="challenge-actions">
+            {% if is_completed %}
+            <div class="completed-banner-lg">✅ Challenge Completed!</div>
+            <a href="{{ url_for('challenge', challenge_id=5) }}" class="next-challenge-btn">Next: Challenge 5 →</a>
+            {% else %}
+            <button class="complete-challenge-btn" onclick="completeChallenge(4)">✅ Mark Challenge Complete</button>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

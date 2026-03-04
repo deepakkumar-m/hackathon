@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% block title %}Challenge 2: {{ challenge.title }} | GBME Hackathon{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="challenge-page">
+        <div class="breadcrumb">
+            <a href="{{ url_for('dashboard') }}">← Dashboard</a>
+            <span class="breadcrumb-sep">/</span>
+            <span>Challenge 2</span>
+        </div>
+
+        <div class="challenge-hero">
+            <div class="challenge-hero-meta">
+                <span class="difficulty-badge {{ challenge.difficulty }}">{{ challenge.icon }} {{
+                    challenge.difficulty|upper }}</span>
+                <span class="time-badge">⏱ {{ challenge.time }}</span>
+            </div>
+            <h1>{{ challenge.emoji }} Challenge 2: {{ challenge.title }}</h1>
+            <p class="challenge-hero-desc">{{ challenge.description }}</p>
+        </div>
+
+        <div class="challenge-tools">
+            <h3>🔗 Tools for this Challenge</h3>
+            <div class="tools-row">
+                {% for tool in tools_with_urls %}
+                <a href="{{ tool.url }}" target="_blank" rel="noopener" class="tool-btn {{ tool.name }}">
+                    {{ tool.label }} ↗
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="challenge-section">
+            <h2>📋 Scenario</h2>
+            <div class="info-card">
+                <p>Remember all those manual steps from Challenge 1? Now see them <strong>disappear</strong>. The
+                    pipeline is fully automated:</p>
+                <div class="flow-diagram-simple">
+                    <div class="flow-box">PR / Merge</div>
+                    <div class="flow-arrow-simple">→</div>
+                    <div class="flow-box">Jenkins Build</div>
+                    <div class="flow-arrow-simple">→</div>
+                    <div class="flow-box">Auto Push to JFrog</div>
+                    <div class="flow-arrow-simple">→</div>
+                    <div class="flow-box">Helm Values Updated</div>
+                    <div class="flow-arrow-simple">→</div>
+                    <div class="flow-box highlight">ArgoCD Auto-Sync</div>
+                </div>
+                <p style="margin-top:16px;">You only need to: <strong>Change code → Raise PR</strong>. Everything else
+                    is automated!</p>
+            </div>
+        </div>
+
+        <div class="challenge-section">
+            <h2>📝 Steps to Complete</h2>
+            <div class="steps-list">
+                <div class="step">
+                    <div class="step-num">1</div>
+                    <div class="step-content">
+                        <h4>Make a Code Change</h4>
+                        <p>Modify the Java application (e.g., change the API response message or version number).</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-num">2</div>
+                    <div class="step-content">
+                        <h4>Raise a Pull Request</h4>
+                        <p>Push your branch and create a PR in <a href="{{ tool_urls.bitbucket }}"
+                                target="_blank">Bitbucket ↗</a>.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-num">3</div>
+                    <div class="step-content">
+                        <h4>Watch the Pipeline</h4>
+                        <p>Go to <a href="{{ tool_urls.jenkins }}" target="_blank">Jenkins ↗</a> and watch the pipeline
+                            trigger automatically:</p>
+                        <ul>
+                            <li>✅ Code pulled from Bitbucket</li>
+                            <li>✅ Docker image built automatically</li>
+                            <li>✅ Image pushed to JFrog</li>
+                            <li>✅ Helm values updated with new tag</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-num">4</div>
+                    <div class="step-content">
+                        <h4>Verify Auto-Deployment</h4>
+                        <p>Check <a href="{{ tool_urls.argocd }}" target="_blank">ArgoCD ↗</a> — the app should
+                            auto-sync and deploy the new version without any manual intervention!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="challenge-section">
+            <h2>🎯 What You Learn</h2>
+            <div class="learning-grid">
+                <div class="learning-item">
+                    <span class="learning-icon">🔄</span>
+                    <div>
+                        <h4>True CI/CD Flow</h4>
+                        <p>From code commit to production deployment — zero manual steps.</p>
+                    </div>
+                </div>
+                <div class="learning-item">
+                    <span class="learning-icon">⚡</span>
+                    <div>
+                        <h4>Why Automation Matters</h4>
+                        <p>Faster deployments, fewer errors, consistent process every time.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="challenge-actions">
+            {% if is_completed %}
+            <div class="completed-banner-lg">✅ Challenge Completed!</div>
+            <a href="{{ url_for('challenge', challenge_id=3) }}" class="next-challenge-btn">Next: Challenge 3 →</a>
+            {% else %}
+            <button class="complete-challenge-btn" onclick="completeChallenge(2)">✅ Mark Challenge Complete</button>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

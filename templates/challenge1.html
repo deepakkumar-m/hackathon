@@ -1,0 +1,165 @@
+{% extends "base.html" %}
+{% block title %}Challenge 1: {{ challenge.title }} | GBME Hackathon{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="challenge-page">
+        <!-- Breadcrumb -->
+        <div class="breadcrumb">
+            <a href="{{ url_for('dashboard') }}">← Dashboard</a>
+            <span class="breadcrumb-sep">/</span>
+            <span>Challenge 1</span>
+        </div>
+
+        <!-- Challenge Header -->
+        <div class="challenge-hero">
+            <div class="challenge-hero-meta">
+                <span class="difficulty-badge {{ challenge.difficulty }}">{{ challenge.icon }} {{
+                    challenge.difficulty|upper }}</span>
+                <span class="time-badge">⏱ {{ challenge.time }}</span>
+            </div>
+            <h1>{{ challenge.emoji }} Challenge 1: {{ challenge.title }}</h1>
+            <p class="challenge-hero-desc">{{ challenge.description }}</p>
+        </div>
+
+        <!-- Tool Links -->
+        <div class="challenge-tools">
+            <h3>🔗 Tools for this Challenge</h3>
+            <div class="tools-row">
+                {% for tool in tools_with_urls %}
+                <a href="{{ tool.url }}" target="_blank" rel="noopener" class="tool-btn {{ tool.name }}">
+                    {{ tool.label }} ↗
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Scenario -->
+        <div class="challenge-section">
+            <h2>📋 Scenario</h2>
+            <div class="info-card">
+                <p>You are given a <strong>Java Spring Boot application</strong>, a <strong>Dockerfile</strong>, and a
+                    <strong>Helm chart</strong>. Your task is to follow the traditional (manual) process that most teams
+                    use before CI/CD automation.
+                </p>
+                <p>This challenge exposes the <strong>pain of manual deployments</strong> so you appreciate what
+                    automation brings.</p>
+            </div>
+        </div>
+
+        <!-- Steps -->
+        <div class="challenge-section">
+            <h2>📝 Steps to Complete</h2>
+            <div class="steps-list">
+                <div class="step">
+                    <div class="step-num">1</div>
+                    <div class="step-content">
+                        <h4>Clone the Repository</h4>
+                        <p>Go to <a href="{{ tool_urls.bitbucket }}" target="_blank">Bitbucket ↗</a> and clone the Java
+                            application repository to your local machine.</p>
+                        <div class="code-block">
+                            <code>git clone https://bitbucket.org/gbme/hackathon-app.git</code>
+                        </div>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-num">2</div>
+                    <div class="step-content">
+                        <h4>Make a Code Change</h4>
+                        <p>Open the Java application and modify the welcome message or version string. This simulates a
+                            developer making changes.</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-num">3</div>
+                    <div class="step-content">
+                        <h4>Build Docker Image via Jenkins</h4>
+                        <p>Go to <a href="{{ tool_urls.jenkins }}" target="_blank">Jenkins ↗</a> and trigger a build.
+                            Jenkins will:</p>
+                        <ul>
+                            <li>Pull your code from Bitbucket</li>
+                            <li>Build the Docker image using the Dockerfile</li>
+                            <li>Tag the image with a version (e.g., <code>1.0</code>)</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-num">4</div>
+                    <div class="step-content">
+                        <h4>Push Image to JFrog Registry</h4>
+                        <p>After a successful build, manually push the image to <a href="{{ tool_urls.jfrog }}"
+                                target="_blank">JFrog Artifactory ↗</a>.</p>
+                        <div class="code-block">
+                            <code>docker push your-jfrog.jfrog.io/docker-local/myapp:1.0</code>
+                        </div>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-num">5</div>
+                    <div class="step-content">
+                        <h4>Update Helm Values</h4>
+                        <p>Open the Helm chart's <code>values.yaml</code> and manually update the image tag to match the
+                            new version you just pushed.</p>
+                        <div class="code-block">
+                            <pre>image:
+  repository: your-jfrog.jfrog.io/docker-local/myapp
+  tag: "1.0"  # ← Update this manually</pre>
+                        </div>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-num">6</div>
+                    <div class="step-content">
+                        <h4>Deploy via ArgoCD</h4>
+                        <p>Go to <a href="{{ tool_urls.argocd }}" target="_blank">ArgoCD ↗</a> and sync the application.
+                            ArgoCD will deploy your updated Helm chart to Kubernetes.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Learning -->
+        <div class="challenge-section">
+            <h2>🎯 What You Learn</h2>
+            <div class="learning-grid">
+                <div class="learning-item">
+                    <span class="learning-icon">🔨</span>
+                    <div>
+                        <h4>What is CI?</h4>
+                        <p>Continuous Integration — automatically building and testing code on every change.</p>
+                    </div>
+                </div>
+                <div class="learning-item">
+                    <span class="learning-icon">🚀</span>
+                    <div>
+                        <h4>What is CD?</h4>
+                        <p>Continuous Delivery/Deployment — automatically deploying tested code to environments.</p>
+                    </div>
+                </div>
+                <div class="learning-item">
+                    <span class="learning-icon">😫</span>
+                    <div>
+                        <h4>Why Manual is Painful</h4>
+                        <p>Every manual step is a chance for error, delay, and inconsistency.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Complete Button -->
+        <div class="challenge-actions">
+            {% if is_completed %}
+            <div class="completed-banner-lg">✅ Challenge Completed!</div>
+            {% if 2 <= 6 %} <a href="{{ url_for('challenge', challenge_id=2) }}" class="next-challenge-btn">
+                Next: Challenge 2 →
+                </a>
+                {% endif %}
+                {% else %}
+                <button class="complete-challenge-btn" onclick="completeChallenge(1)">
+                    ✅ Mark Challenge Complete
+                </button>
+                {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
